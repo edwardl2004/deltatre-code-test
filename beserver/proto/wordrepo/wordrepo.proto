@@ -1,0 +1,56 @@
+syntax = "proto3";
+package wordrepo;
+
+// import "google/protobuf/timestamp.proto";
+// import "google/api/annotations.proto";
+
+option go_package = "github.com/edwardl2004/deltatre-code-test/beserver/proto/wordrepo";
+
+service WordRepo {
+  // SearchWord finds out if a word exists in the list.
+  rpc SearchWord(SearchWordRequest) returns (SearchWordResponse) {
+  }
+
+  // UpdateWordList updates the search word list
+  rpc UpdateWordList(UpdateWordRequest) returns (UpdateWordResponse) {
+  }
+
+  // GetTopWords returns the top 5 words and the counts they are searched
+  rpc GetTopWords(GetTopWordRequest) returns (GetTopWordResponse) {
+  }
+}
+
+/* Requests/Responses */
+
+// Request for SearchWord call.
+message SearchWordRequest {
+  string word = 1;
+}
+
+// Response to SearchWord call.
+message SearchWordResponse {
+  bool found = 1;
+}
+
+// Request for UpdateWordList call.
+message UpdateWordRequest {
+  repeated string words = 1;
+}
+
+message UpdateWordResponse {
+    string status = 1;
+    string message = 2;
+}
+
+// Request for GetTopWords call
+message GetTopWordRequest {
+}
+
+message GetTopWordResponse {
+  repeated TopSearch list = 1;
+}
+
+message TopSearch {
+    string word = 1;
+    int64 count = 2;
+}
