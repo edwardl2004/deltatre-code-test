@@ -41,7 +41,7 @@ func (s *wordRepoService) UpdateWordList(ctx context.Context, in *wordrepo.Updat
 	s.Lock()
 	defer s.Unlock()
 
-	s.repo = make(map[string]int64, 0)
+	s.repo = make(map[string]int64)
 	for _, word := range in.Words {
 		s.repo[word] = 0
 	}
