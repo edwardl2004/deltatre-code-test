@@ -62,6 +62,7 @@ func (s *wordRepoService) GetTopWords(ctx context.Context, in *wordrepo.GetTopWo
 		index := 0
 		for k, v := range s.repo {
 			list[index] = &wordrepo.TopSearch{Word: k, Count: v}
+			index++
 		}
 
 		return &wordrepo.GetTopWordResponse{List: list}, nil
