@@ -17,6 +17,12 @@ func NewWordRepoService() wordrepo.WordRepoServer {
 }
 
 func (s *wordRepoService) SearchWord(ctx context.Context, in *wordrepo.SearchWordRequest) (*wordrepo.SearchWordResponse, error) {
+	if _, ok := s.repo[in.Word]; ok {
+		s.repo[in.Word]++
+		return &wordrepo.SearchWordResponse{Found: true}, nil
+	}
+
+	return &wordrepo.SearchWordResponse{Found: false}, nil
 }
 
 // UpdateWordList updates the search word list
