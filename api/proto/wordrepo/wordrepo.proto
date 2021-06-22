@@ -8,12 +8,12 @@ option go_package = "github.com/edwardl2004/deltatre-code-test/api/proto/wordrep
 service WordRepo {
   // SearchWord finds out if a word exists in the list.
   rpc SearchWord(SearchWordRequest) returns (SearchWordResponse) {
-    option (google.api.http) = { post: "/v1/words/search" };
+    option (google.api.http) = { post: "/v1/words/search", body: "*"};
   }
 
   // UpdateWordList updates the search word list
   rpc UpdateWordList(UpdateWordRequest) returns (UpdateWordResponse) {
-    option (google.api.http) = { post: "/v1/words" };
+    option (google.api.http) = { post: "/v1/words", body: "*"};
   }
 
   // GetTopWords returns the top 5 words and the counts they are searched
