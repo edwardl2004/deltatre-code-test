@@ -27,6 +27,16 @@ func (s *wordRepoService) SearchWord(ctx context.Context, in *wordrepo.SearchWor
 
 // UpdateWordList updates the search word list
 func (s *wordRepoService) UpdateWordList(ctx context.Context, in *wordrepo.UpdateWordRequest) (*wordrepo.UpdateWordResponse, error) {
+	for _, word := range in.Words {
+		if _, ok := s.repo[word]; !ok {
+			s.repo[word] = 0
+		}
+	}
+
+	return &wordrepo.UpdateWordResponse{
+		Status:  "success",
+		Message: "",
+	}, nil
 }
 
 // GetTopWords returns the top 5 words and the counts they are searched
