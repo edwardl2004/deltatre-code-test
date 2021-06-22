@@ -2,12 +2,14 @@ package service
 
 import (
 	"context"
+	"sync"
 
 	"github.com/edwardl2004/deltatre-code-test/beserver/proto/wordrepo"
 )
 
 type wordRepoService struct {
 	repo map[string]int64
+	sync.RWMutex
 }
 
 func NewWordRepoService() wordrepo.WordRepoServer {
@@ -17,9 +19,18 @@ func NewWordRepoService() wordrepo.WordRepoServer {
 }
 
 func (s *wordRepoService) SearchWord(ctx context.Context, in *wordrepo.SearchWordRequest) (*wordrepo.SearchWordResponse, error) {
+	s.RLock()
 	if _, ok := s.repo[in.Word]; ok {
-		s.repo[in.Word]++
-		return &wordrepo.SearchWordResponse{Found: true}, nil
+		s.RUnlock()
+		s.Lock()
+		defer s.Unlock()
+		// Check again if the search word exists, in case the map is updated between s.RUnlock() and s.Lock()
+		if _, ok := s.repo[in.Word]; ok {
+			s.repo[in.Word]++
+			return &wordrepo.SearchWordResponse{Found: true}, nil
+		} else {
+			return &wordrepo.SearchWordResponse{Found: false}, nil
+		}
 	}
 
 	return &wordrepo.SearchWordResponse{Found: false}, nil
@@ -27,6 +38,9 @@ func (s *wordRepoService) SearchWord(ctx context.Context, in *wordrepo.SearchWor
 
 // UpdateWordList updates the search word list
 func (s *wordRepoService) UpdateWordList(ctx context.Context, in *wordrepo.UpdateWordRequest) (*wordrepo.UpdateWordResponse, error) {
+	s.Lock()
+	defer s.Unlock()
+
 	for _, word := range in.Words {
 		if _, ok := s.repo[word]; !ok {
 			s.repo[word] = 0
@@ -41,6 +55,9 @@ func (s *wordRepoService) UpdateWordList(ctx context.Context, in *wordrepo.Updat
 
 // GetTopWords returns the top 5 words and the counts they are searched
 func (s *wordRepoService) GetTopWords(ctx context.Context, in *wordrepo.GetTopWordRequest) (*wordrepo.GetTopWordResponse, error) {
+	s.RLock()
+	defer s.RUnlock()
+
 	if len(s.repo) <= 5 {
 		list := make([]*wordrepo.TopSearch, len(s.repo))
 		index := 0
