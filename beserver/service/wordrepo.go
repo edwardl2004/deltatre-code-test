@@ -41,6 +41,18 @@ func (s *wordRepoService) UpdateWordList(ctx context.Context, in *wordrepo.Updat
 
 // GetTopWords returns the top 5 words and the counts they are searched
 func (s *wordRepoService) GetTopWords(ctx context.Context, in *wordrepo.GetTopWordRequest) (*wordrepo.GetTopWordResponse, error) {
+	if len(s.repo) <= 5 {
+		list := make([]*wordrepo.TopSearch, len(s.repo))
+		index := 0
+		for k, v := range s.repo {
+			list[index] = &wordrepo.TopSearch{Word: k, Count: v}
+		}
+
+		return &wordrepo.GetTopWordResponse{List: list}, nil
+	}
+
+	list := s.getTopNElements(5)
+	return &wordrepo.GetTopWordResponse{List: list}, nil
 }
 
 func (s *wordRepoService) getTopNElements(n int) []*wordrepo.TopSearch {
