@@ -12,7 +12,7 @@ type wordRepoService struct {
 
 func NewWordRepoService() wordrepo.WordRepoServer {
 	return &wordRepoService{
-		repo: map[string]int64{},
+		repo: map[string]int64{"hello": 0, "goodbye": 0, "simple": 0, "list": 0, "search": 0, "filter": 0, "yes": 0, "no": 0},
 	}
 }
 
@@ -41,4 +41,38 @@ func (s *wordRepoService) UpdateWordList(ctx context.Context, in *wordrepo.Updat
 
 // GetTopWords returns the top 5 words and the counts they are searched
 func (s *wordRepoService) GetTopWords(ctx context.Context, in *wordrepo.GetTopWordRequest) (*wordrepo.GetTopWordResponse, error) {
+}
+
+func (s *wordRepoService) getTopNElements(n int) []*wordrepo.TopSearch {
+	list := make([]*wordrepo.TopSearch, n)
+	lastIndex := -1
+	newItemAppended := false
+	for k, v := range s.repo {
+		if lastIndex < n-1 {
+			// list not full, append current word to the last of the list
+			lastIndex++
+			list[lastIndex] = &wordrepo.TopSearch{Word: k, Count: v}
+			newItemAppended = true
+		} else {
+			if v > list[lastIndex].Count {
+				// replace the smallest item (ie, the last item) with new one, if new item is larger
+				list[lastIndex].Word = k
+				list[lastIndex].Count = v
+				newItemAppended = true
+			}
+		}
+
+		// bubble sort the new inserted item to the right position
+		if newItemAppended {
+			for j := lastIndex; j > 0; j-- {
+				if list[j].Count > list[j-1].Count {
+					// new item is larger than the previous, swap them
+					temp := list[j]
+					list[j] = list[j-1]
+					list[j-1] = temp
+				}
+			}
+		}
+	}
+	return list
 }
