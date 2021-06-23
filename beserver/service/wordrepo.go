@@ -33,6 +33,7 @@ func (s *wordRepoService) SearchWord(ctx context.Context, in *wordrepo.SearchWor
 		}
 	}
 
+	s.RUnlock()
 	return &wordrepo.SearchWordResponse{Found: false}, nil
 }
 
