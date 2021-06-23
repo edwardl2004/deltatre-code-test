@@ -6,11 +6,11 @@ and `api/` folders, respectively.
 
 ## Install Go tools and Python requirements
 The build process requires a number of Go tools. To install them, find the tools.go, and install all the tools listed in the file:
-`go installgithub.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway`
-`go installgithub.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2`
-`go installgoogle.golang.org/genproto/googleapis/api`
-`go installgoogle.golang.org/grpc/cmd/protoc-gen-go-grpc`
-`go installgoogle.golang.org/protobuf/cmd/protoc-gen-go`
+`go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway`
+`go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2`
+`go install google.golang.org/genproto/googleapis/api`
+`go install google.golang.org/grpc/cmd/protoc-gen-go-grpc`
+`go install google.golang.org/protobuf/cmd/protoc-gen-go`
 
 The integration testing code requires some python libraries. To install them, run the command:
 `pip install -r ./integration_tests/requirements.txt`
