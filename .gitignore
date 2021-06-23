@@ -4,6 +4,10 @@
 *.dll
 *.so
 *.dylib
+*.pyc
+*.log
+beapp
+apiapp
 
 # Test binary, built with `go test -c`
 *.test
