@@ -5,11 +5,11 @@ import json
 def test_search_word_default_list(base_url):
     url = base_url + "v1/words/search"
 
-    _search_and_verify_result(url, "hello", 6, True)
-    _search_and_verify_result(url, "simple", 5, True)
+    _search_and_verify_result(url, "Hello", 6, True)
+    _search_and_verify_result(url, "simplE", 5, True)
     _search_and_verify_result(url, "goodbye", 4, True)
     _search_and_verify_result(url, "filter", 1, True)
-    _search_and_verify_result(url, "yes", 8, True)
+    _search_and_verify_result(url, "YES", 8, True)
 
     url = base_url + "v1/words"
     r = requests.get(url)
@@ -44,7 +44,7 @@ def test_search_word_default_list(base_url):
 def test_update_list(base_url):
     url = base_url + "v1/words"
     payload = {
-        "words": ["golang", "world"]
+        "words": ["Golang", "world"]
     }
     r = requests.post(url, data=json.dumps(payload))
     assert r.status_code == 200
@@ -57,7 +57,7 @@ def test_update_list(base_url):
     url = base_url + "v1/words/search"
     # search existing words
     _search_and_verify_result(url, "golang", 2, True)
-    _search_and_verify_result(url, "world", 3, True)
+    _search_and_verify_result(url, "WORLD", 3, True)
     # search non-existing words
     _search_and_verify_result(url, "nonexistingword", 3, False)
 
@@ -84,7 +84,7 @@ def test_update_list(base_url):
 def test_update_long_list(base_url):
     url = base_url + "v1/words"
     payload = {
-        "words": ["grpc", "client", "api", "server", "protoc", "gateway", "runtime"]
+        "words": ["gRPC", "Client", "API", "Server", "protoc", "Gateway", "runtime"]
     }
     r = requests.post(url, data=json.dumps(payload))
     assert r.status_code == 200
@@ -96,10 +96,10 @@ def test_update_long_list(base_url):
 
     url = base_url + "v1/words/search"
     # search existing words
-    _search_and_verify_result(url, "server", 2, True)
+    _search_and_verify_result(url, "SERVER", 2, True)
     _search_and_verify_result(url, "client", 3, True)
     _search_and_verify_result(url, "grpc", 3, True)
-    _search_and_verify_result(url, "gateway", 4, True)
+    _search_and_verify_result(url, "GATEWAY", 4, True)
     # search non-existing words
     _search_and_verify_result(url, "nonexistingword", 3, False)
 
